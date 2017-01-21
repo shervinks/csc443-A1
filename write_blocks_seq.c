@@ -21,14 +21,19 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 	long block_size = atol(argv[2]);
-	long records_per_block = block_size / sizeof(Record);
+	long block_capacity = block_size / sizeof(Record);
 	char current_line[MAX_CHARS_PER_LINE];
-	// Change buffer size to records_per_block. This is temp for testing
-	Record buffer[27];
+	Record buffer[block_capacity];
 	FILE *fp_read;
+	FILE *fp_write;
 	/* open text file for reading */
 	if (!(fp_read= fopen ( argv[1] , "r" ))) {
 		printf ("Could not open file \"%s\" for reading \n", argv[1]);
+		return (-1);
+	}
+	/* open binary file for writing */
+	if (!(fp_write = fopen ( "records.dat" , "wb" ))) {
+		printf ("Could not open file \"%s\" for writing \n", "records.dat");
 		return (-1);
 	}
 	int i = 0;
@@ -37,19 +42,19 @@ int main(int argc, char *argv[]) {
 		current_line [strcspn (current_line, "\r\n")] = '\0'; //remove end-of-line characters
 		buffer[i] = parse_line(current_line);
 		i++;
+		// If the buffer is full flush the content into disk
+		if (i == block_capacity) { // buffer is full
+			fwrite ( &buffer, sizeof(Record), block_capacity, fp_write);
+			fflush (fp_write);
+			i = 0;
+		}
 	}
-	fclose (fp_read);
-	// Write a dat file. This is temporary. Need to move this to inside the while loop
-	FILE *fp_write;
-	if (!(fp_write = fopen ( "records.dat" , "wb" ))) {
-		printf ("Could not open file \"%s\" for writing \n", "records.dat");
-		return (-1);
+	// Check if there is anything remaning in the buffer to write
+	if (i > 0) {
+		fwrite ( &buffer, sizeof(Record), i, fp_write);
 	}
-	fwrite ( &buffer, sizeof(Record), 27, fp_write);
-	fflush (fp_write);
 	fclose (fp_write);
-	//free(buffer);
-	
-	print_dat_file("records.dat");
+	fclose (fp_read);
+	//print_dat_file("records.dat");
 	return 0;
 }

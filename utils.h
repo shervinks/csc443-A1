@@ -6,5 +6,5 @@ typedef struct record {
 /** Print out the context of buffer(record array). For testing purpose only **/
 void print_buffer(Record r[]);
 
-/** Print out the content of a binary file**/
+/** Print out the content of a binary file **/
 int print_dat_file(char *filename);

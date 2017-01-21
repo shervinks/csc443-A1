@@ -28,7 +28,8 @@ int print_dat_file(char *filename) {
 	Record r[number_of_records];
 	/* reading records */
 	int n = fread (&r, 8, number_of_records, fp_read);
-	for (int i=0; i < n; i++) {
+	int i;
+	for (i=0; i < n; i++) {
 		printf("uid1: %d, uid2: %d\n", r[i].uid1, r[i].uid2);
 	}
 	fclose(fp_read);

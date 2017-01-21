@@ -5,7 +5,8 @@ CFLAGS += -fno-exceptions
 CFLAGS += -finline-functions
 CFLAGS += -funroll-loops
 CFLAGS += -D_FILE_OFFSET_BITS=64
- 
+CFLAGS += -g
+
 # Source files
 WRITE_BLOCKS_SRC= utils.c write_blocks_seq.c 
  
