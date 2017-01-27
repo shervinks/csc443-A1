@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[]) {
 	if (argc < 3) {
-        printf("read_blocks_seq takes 2 arguments: read_blocks_seq <binary input filename> <block size>\n");
+    	printf("read_blocks_seq takes 2 arguments: read_blocks_seq <binary input filename> <block size>\n");
         return -1;
     }
 	FILE *fp_read;
@@ -19,32 +19,37 @@ int main(int argc, char *argv[]) {
 		return (-1);
 	}
 
-	// calculate number of records in a block
 	long block_size = atol(argv[2]);
-	long number_of_records = block_size / sizeof(Record);
+	
+	// check if block_size is a multiple of sizeof(record)
+	if (block_size % sizeof(Record) != 0){
+		printf ("Block size is not a multiple of record size\n");
+		return (-1);
+	}	
 
-	Record r[number_of_records];
-	/* reading records */
-	int n = fread (&r, 8, number_of_records, fp_read);
-
-	// make a list of unique followers and how many they are following
-	int i;
-	int followers[number_of_records*2];
-	int unique = 0;
-	int index;
-	for (i=0; i < n; i++) {
-		index = exists(followers, unique, r[i].uid1);
-		if (index == -1){
-			// add follower to our list of accounted followers
-			followers[unique*2] = r[i].uid1;
-			followers[unique*2+1] = 1;	
-			unique++;	
-		} else {
-			followers[index+1]++;
-		}
+	// calculate the number of records in the dat file
+	fseek(fp_read, 0L, SEEK_END);
+	long filesize = ftell(fp_read);
+	long number_of_blocks = filesize / block_size;
+	if (filesize % block_size != 0){
+		number_of_blocks++;	
 	}
-	print_followers(followers, unique);
-	print_max_avg(followers, unique);
+	// return the file pointer to the start
+	fseek(fp_read, 0L, SEEK_SET);
+
+	// calculate number of records in a block
+	long records_per_block = block_size / sizeof(Record);
+
+	Record * buffer = (Record *) calloc (records_per_block, sizeof (Record)) ;
+	
+	/* reading records */
+	int calculations[number_of_blocks*2];
+	int i;
+	for (i = 0; i < number_of_blocks){
+		int n = fread (&buffer, 8, records_per_block, fp_read);
+		get_calculation(buffer, records_per_block, calculations, i);	
+	}
+
 	return 0;
 }
 

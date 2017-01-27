@@ -37,4 +37,20 @@ int print_dat_file(char *filename) {
 	return 0;
 }
 
+/** calculate the average and max for the given list of records **/
+void get_calculation(buffer, size, calculations, index){
+	int i;
+	int current_id = buffer[0].uid1;
+	int temp_max = 1;
+	int max = 0;
+	int unique = 1;
+	for (i = 1; i < size; i++){
+		if (current_id == buffer[i].uid1){
+			temp_max++;
+		} else {
+			current_id = buffer[i].uid1;
+		}	
+	}
+
+}
 
