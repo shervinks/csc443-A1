@@ -5,8 +5,8 @@
 #include <time.h>
 
 int main(int argc, char *argv[]) {
-	if (argc < 3) {
-        printf("read_blocks_seq takes 1 argument: read_blocks_seq <binary input filename> <block size>\n");
+	if (argc < 4) {
+        printf("read_blocks_seq takes 1 argument: read_blocks_seq <binary input filename> <block size> <x>\n");
         return -1;
     }
 	FILE *fp_read;
@@ -17,42 +17,54 @@ int main(int argc, char *argv[]) {
 		return (-1);
 	}
 
+	long block_size = atol(argv[2]);
+	int x = atoi(argv[3]);
+
+	// check if block_size is a multiple of sizeof(record)
+	if (block_size % sizeof(Record) != 0){
+		printf ("Block size is not a multiple of record size\n");
+		return (-1);
+	}
+	
 	// calculate the number of records in the dat file
 	fseek(fp_read, 0L, SEEK_END);
     long filesize = ftell(fp_read);
-	long number_of_records = filesize / sizeof(Record);
+	long total_records = filesize / sizeof(Record);
 	// return the file pointer to the start
     fseek(fp_read, 0L, SEEK_SET);
 
-	
-	Record r[number_of_records];
-	/* reading records into memory */
-	int n = fread (&r, 8, number_of_records, fp_read);
+	// calculate number of records in a block
+	long records_per_block = block_size / sizeof(Record);
 
-	// make list of sample_size followers starting at a random position
-	long sample_size = atoi(argv[2])/sizeof(Record);
+	Record * buffer = (Record *) calloc (total_records, sizeof (Record));
 
-	srand(time(NULL));
-	int ran_val = rand() % (number_of_records - sample_size);
+	/* reading records */
+	float calculations[x*2];
+	int n = fread (buffer, sizeof(Record), total_records, fp_read);
 
+	/* get random samples */
 	int i;
-	int followers[sample_size*2];
-	int unique = 0;
-	int index;
-	for (i=ran_val; i < sample_size+ran_val; i++) {
-		index = exists(followers, unique, r[i].uid1);
-		if (index == -1){
-			// add follower to our list of accounted followers
-			followers[unique*2] = r[i].uid1;
-			followers[unique*2+1] = 1;	
-			unique++;	
+	int r_val;
+	int buffer_size;
+	srand(time(NULL));
+	for (i = 0; i < x; i++){
+		r_val = rand() % total_records;
+		if (r_val + records_per_block >= total_records){
+			buffer_size = total_records;
 		} else {
-			followers[index+1]++;
+			buffer_size = r_val + records_per_block;
 		}
+		get_calculation(buffer, buffer_size, calculations, i*2, r_val);
 	}
 
-	print_followers(followers, unique);
-	print_max_avg(followers, unique);
+	print_calculations(calculations, x);
 
+	free(buffer);
 	return 0;
 }
+
+
+
+
+
+	

@@ -2,9 +2,9 @@
 #include <stdio.h>
 
 /** Print out the context of buffer. For testing purpose only **/
-void print_buffer(Record r[]) {
+void print_buffer(Record r[], int size) {
 	int i = 0;
-	while(i < 27) {
+	while(i < size) {
 		printf("First: %d, Second: %d\n", r[i].uid1, r[i].uid2);
 		i++;
 	}
@@ -38,19 +38,55 @@ int print_dat_file(char *filename) {
 }
 
 /** calculate the average and max for the given list of records **/
-void get_calculation(buffer, size, calculations, index){
+void get_calculation(Record * buffer, int size, float calculations[], int index, int start_pos){
 	int i;
 	int current_id = buffer[0].uid1;
-	int temp_max = 1;
+	int temp_max = 0;
 	int max = 0;
 	int unique = 1;
-	for (i = 1; i < size; i++){
+	for (i = start_pos; i < size; i++){
+		// check if uid1 has changed
 		if (current_id == buffer[i].uid1){
 			temp_max++;
 		} else {
 			current_id = buffer[i].uid1;
+			if (temp_max > max){
+				max = temp_max;
+			}
+			temp_max = 0;
+			unique++;
 		}	
 	}
-
+	if (temp_max > max){
+		max = temp_max;
+	}
+	calculations[index] = max;
+	calculations[index+1] = (float)(size-start_pos)/unique;
+	//printf("max: %.6f average: %.6f\n", calculations[index], calculations[index+1]);
 }
+
+/** calculate and print the overall max and average **/
+void print_calculations(float calculations[], int size){
+	int i;
+	int max = 0;
+	float total = 0; 
+	for (i = 0; i < size; i++){
+		if (calculations[2*i] > max){
+			max = calculations[2*i];
+		}
+		total += calculations[2*i+1];
+	}
+	
+	printf("Max: %d Average: %.6f\n", max, total/size);
+}
+
+
+
+
+
+
+
+
+
+
 

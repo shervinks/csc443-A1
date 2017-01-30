@@ -19,31 +19,18 @@ int main(int argc, char *argv[]) {
 	// calculate the number of records in the dat file
 	fseek(fp_read, 0L, SEEK_END);
     long filesize = ftell(fp_read);
-	long number_of_records = filesize / sizeof(Record);
+	long total_records = filesize / sizeof(Record);
 	// return the file pointer to the start
     fseek(fp_read, 0L, SEEK_SET);
 	
-	Record r[number_of_records];
+	Record * buffer = (Record *) calloc (total_records, sizeof (Record));
+
 	/* reading records */
-	int n = fread (&r, 8, number_of_records, fp_read);
+	float calculations[2];
+	int n = fread (buffer, sizeof(Record), total_records, fp_read);
+	get_calculation(buffer, n, calculations, 0, 0);
 	
-	// make a list of unique followers and how many they are following
-	int i;
-	int followers[number_of_records*2];
-	int unique = 0;
-	int index;
-	for (i=0; i < n; i++) {
-		index = exists(followers, unique, r[i].uid1);
-		if (index == -1){
-			// add follower to our list of accounted followers
-			followers[unique*2] = r[i].uid1;
-			followers[unique*2+1] = 1;	
-			unique++;	
-		} else {
-			followers[index+1]++;
-		}
-	}
-	print_followers(followers, unique);
-	print_max_avg(followers, unique);
+	print_calculations(calculations, 1);	
+
 	return 0;
 }

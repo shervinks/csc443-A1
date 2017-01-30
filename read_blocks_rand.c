@@ -8,8 +8,8 @@
 
 
 int main(int argc, char *argv[]) {
-	if (argc < 3) {
-        printf("read_blocks_seq takes 2 arguments: read_blocks_seq <binary input filename> <X>\n");
+	if (argc < 4) {
+        printf("read_blocks_seq takes 2 arguments: read_blocks_seq <binary input filename> <block size> <X>\n");
         return -1;
     }
 	FILE *fp_read;
@@ -20,49 +20,44 @@ int main(int argc, char *argv[]) {
 		return (-1);
 	}
 
-	int x = atoi(argv[2]);
+	long block_size = atol(argv[2]);
+	int x = atoi(argv[3]);
+
+	// check if block_size is a multiple of sizeof(record)
+	if (block_size % sizeof(Record) != 0){
+		printf ("Block size is not a multiple of record size\n");
+		return (-1);
+	}	
 
 	// calculate the number of records in the dat file
 	fseek(fp_read, 0L, SEEK_END);
-    long filesize = ftell(fp_read);
-	long number_of_records = filesize / sizeof(Record);
+	long filesize = ftell(fp_read);
+	long total_records = filesize / sizeof(Record);
 	// return the file pointer to the start
-    fseek(fp_read, 0L, SEEK_SET);
+	fseek(fp_read, 0L, SEEK_SET);
 
-	Record r[x];
-	/* reading records randomly */
-	int j;
-	int r_val;
-	int n = 0;
-	int r_pos = 0;
+	// calculate number of records in a block
+	long records_per_block = block_size / sizeof(Record);
 
-	srand(time(NULL));
+	Record * buffer;
 
-	for (j=0; j<x; j++){
-		r_val = rand() % number_of_records;
-		fseek(fp_read, 8*r_val, SEEK_SET);
-		n += fread (&r[r_pos], 8, 1, fp_read);
-		r_pos++;
-	}
-
-	// make a list of unique followers and how many they are following
+	/* reading records */
+	float calculations[x*2];
 	int i;
-	int followers[number_of_records*2];
-	int unique = 0;
-	int index;
-	for (i=0; i < n; i++) {
-		index = exists(followers, unique, r[i].uid1);
-		if (index == -1){
-			// add follower to our list of accounted followers
-			followers[unique*2] = r[i].uid1;
-			followers[unique*2+1] = 1;	
-			unique++;	
-		} else {
-			followers[index+1]++;
-		}
+	int r_val;
+	srand(time(NULL));
+	for (i = 0; i < x; i++){
+		buffer = (Record *) calloc (records_per_block, sizeof (Record));
+		// go to a random position in file
+		r_val = rand() % total_records;
+		fseek(fp_read, r_val*sizeof(Record), SEEK_SET);
+
+		int n = fread (buffer, sizeof(Record), records_per_block, fp_read);
+		get_calculation(buffer, n, calculations, i*2, 0);	
+		free(buffer);
 	}
-	print_followers(followers, unique);
-	print_max_avg(followers, unique);
+
+	print_calculations(calculations, x);
 
 	return 0;
 }
