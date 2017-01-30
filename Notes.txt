@@ -1,0 +1,5 @@
+Questions:
+
+read_blocks_rand:
+-when seeking to random locations in file, swhould we seek from SEEK_SET everytime
+or seek depending on where we are in the file atm?
