@@ -47,13 +47,35 @@ int main(int argc, char *argv[]) {
 
 	Record * buffer;
 	
+
 	/* reading records */
-	float calculations[number_of_blocks*2];
 	int i;
+	int j;
+	int temp_max = 0;
+	int max = 0;
+	int unique = 1;
+	int current_id = -1;
 	for (i = 0; i < number_of_blocks; i++){
 		buffer = (Record *) calloc (records_per_block, sizeof (Record));
 		int n = fread (buffer, sizeof(Record), records_per_block, fp_read);
-		get_calculation(buffer, n, calculations, i*2, 0);	
+
+		if (current_id == -1) current_id = buffer[0].uid1;
+		for (j = 0; j < n; j++){
+			// check if uid1 has changed
+			if (current_id == buffer[j].uid1){
+				temp_max++;
+			} else {
+				current_id = buffer[j].uid1;
+				if (temp_max > max){
+					max = temp_max;
+				}
+				temp_max = 0;
+				unique++;
+			}	
+		}
+		if (temp_max > max){
+			max = temp_max;
+		}
 		free(buffer);
 	}
 	ftime(&t_end);
@@ -61,7 +83,7 @@ int main(int argc, char *argv[]) {
 	time_spent_ms = (long double) (1000 *(t_end.time - t_begin.time)
        + (t_end.millitm - t_begin.millitm));
 
-	print_calculations(calculations, number_of_blocks);
+	printf("Max: %d Average: %.6f\n", max, (float)total_records/unique);
 	printf ("Data rate: %.9f MBPS\n", 
 		((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/1000000);
 
