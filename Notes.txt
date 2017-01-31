@@ -24,3 +24,6 @@ sequential reads
 cannot use fflush
 
 for timing writes, time reading the csv as well
+
+
+need to fclose for read
