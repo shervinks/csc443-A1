@@ -13,9 +13,14 @@ READ_BLOCKS_SRC= utils.c read_blocks_seq.c
 READ_RAM_SRC= utils.c read_ram_seq.c
 READ_BLOCKS_RAND_SRC= utils.c read_blocks_rand.c
 READ_RAM_RAND_SRC= utils.c read_ram_rand.c
+WRITE_BLOCKS_RAND = utils.c write_blocks_rand.c
  
 # Binaries
+<<<<<<< HEAD
+all: write_blocks_seq read_blocks_seq read_ram_seq read_blocks_rand read_ram_rand write_blocks_rand
+=======
 all: write_blocks_seq read_blocks_seq read_blocks_rand read_ram_seq read_ram_rand
+>>>>>>> 2d82948ff8d05e20ea50b9fd61e14b2a1848662b
  
 #sequential writing in blocks
 
@@ -34,5 +39,11 @@ read_ram_seq: $(READ_RAM_SRC)
 read_ram_rand: $(READ_RAM_RAND_SRC)
 	$(CC) $(CFLAGS) $^ -o $@
 
+<<<<<<< HEAD
+write_blocks_rand: $(WRITE_BLOCKS_RAND)
+	$(CC) $(CFLAGS) $^ -o $@
+
+=======
+>>>>>>> 2d82948ff8d05e20ea50b9fd61e14b2a1848662b
 clean:  
 	rm write_blocks_seq read_blocks_seq read_ram_seq read_blocks_rand read_ram_rand *.o
