@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 	FILE *fp_write;
 	/* open text file for reading */
 	if (!(fp_read= fopen ( argv[1] , "r" ))) {
-		printf ("Could not open file \"%s\" for reading \n", argv[1]);
+		printf ("Could not open file \"%s\" for writing \n", argv[1]);
 		return (-1);
 	}
 	/* open binary file for writing */
