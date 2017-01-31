@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 	//Create a dummy record to insert into dat file
 	Record *r = (Record *) malloc (sizeof(Record)); 
 	r->uid1 = 1;
-	r->uid2 = 2;
+	r->uid2 = 1;
 	// calculate the number of records in the dat file
 	fseek(fp_write, 0L, SEEK_END);
 	long filesize = ftell(fp_write);
