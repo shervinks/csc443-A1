@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 		return (-1);
 	}	
 
-	ftime(&t_begin);
+	
 	// calculate the number of records in the dat file
 	fseek(fp_read, 0L, SEEK_END);
 	long filesize = ftell(fp_read);
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 
 	Record * buffer;
 	
-
+	ftime(&t_begin);
 	/* reading records */
 	int i;
 	int j;
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
 	printf("Max: %d Average: %.6f\n", max, (float)total_records/unique);
 	printf ("Data rate: %.9f MBPS\n", 
 		((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/1000000);
-
+	printf("total records: %d\n", total_records);
 	return 0;
 }
 
