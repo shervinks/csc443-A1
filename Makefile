@@ -15,9 +15,10 @@ READ_BLOCKS_RAND_SRC= utils.c read_blocks_rand.c
 READ_RAM_RAND_SRC= utils.c read_ram_rand.c
 WRITE_BLOCKS_RAND = utils.c write_blocks_rand.c
 WRITE_RAM_RAND = utils.c write_ram_rand.c
+WRITE_LINES = write_lines.c
 
 # Binaries
-all: write_blocks_seq read_blocks_seq read_ram_seq read_blocks_rand read_ram_rand write_blocks_rand write_ram_rand
+all: write_blocks_seq read_blocks_seq read_ram_seq read_blocks_rand read_ram_rand write_blocks_rand write_ram_rand write_lines
  
 #sequential writing in blocks
 write_blocks_seq: $(WRITE_BLOCKS_SRC)
@@ -39,6 +40,9 @@ write_blocks_rand: $(WRITE_BLOCKS_RAND)
 	$(CC) $(CFLAGS) $^ -o $@
 
 write_ram_rand: $(WRITE_RAM_RAND)
+	$(CC) $(CFLAGS) $^ -o $@
+	
+write_lines: $(WRITE_LINES)
 	$(CC) $(CFLAGS) $^ -o $@
 	
 clean:  

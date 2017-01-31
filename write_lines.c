@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 	int i = 0;
 	/* reading lines */
 	while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
-		fwrite ( &current_line, MAX_CHARS_PER_LINE, 1, fp_write);
+		fwrite ( &current_line, strlen(current_line), sizeof(char), fp_write);
 		fflush (fp_write);
 		i++;
 	}
