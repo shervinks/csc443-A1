@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/timeb.h>
 
 #define MAX_CHARS_PER_LINE 16
 
@@ -23,14 +24,21 @@ int main(int argc, char *argv[]) {
 		return (-1);
 	}
 	int i = 0;
+    struct timeb t_begin, t_end;
+	long time_spent_ms;
+	//Start timing
+	ftime(&t_end);  	
 	/* reading lines */
 	while( fgets (current_line, MAX_CHARS_PER_LINE, fp_read)!=NULL ) {
 		fwrite ( &current_line, strlen(current_line), sizeof(char), fp_write);
-		fflush (fp_write);
 		i++;
 	}
 	fclose (fp_write);
+	ftime(&t_end);
+	time_spent_ms = (long double) (1000 *(t_end.time - t_begin.time)
+       + (t_end.millitm - t_begin.millitm));
+	printf ("Data rate: %.9f MBPS\n", 
+		(i/(float)time_spent_ms * 1000)/1000000);
 	fclose (fp_read);
-	
 	return 0;
 }
