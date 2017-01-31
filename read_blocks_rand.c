@@ -3,6 +3,7 @@
 #include <string.h>
 #include "utils.h"
 #include <time.h>
+#include <sys/timeb.h>
 
 #define MAX_CHARS_PER_LINE 16
 
@@ -13,6 +14,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 	FILE *fp_read;
+	struct timeb t_begin, t_end;
+	long time_spent_ms;
 
 	/* open dat file for reading */
 	if (!(fp_read= fopen ( argv[1] , "rb" ))) {
@@ -41,10 +44,14 @@ int main(int argc, char *argv[]) {
 
 	Record * buffer;
 
+	// beging recording time
+	ftime(&t_begin);
+
 	/* reading records */
 	float calculations[x*2];
 	int i;
 	int r_val;
+	int total_records_read = 0;
 	srand(time(NULL));
 	for (i = 0; i < x; i++){
 		buffer = (Record *) calloc (records_per_block, sizeof (Record));
@@ -53,11 +60,18 @@ int main(int argc, char *argv[]) {
 		fseek(fp_read, r_val*sizeof(Record), SEEK_SET);
 
 		int n = fread (buffer, sizeof(Record), records_per_block, fp_read);
+		total_records_read += n;
 		get_calculation(buffer, n, calculations, i*2, 0);	
 		free(buffer);
 	}
 
-	print_calculations(calculations, x);
+	// finish recording time
+	ftime(&t_end);
 
+	time_spent_ms = (long double) (1000 *(t_end.time - t_begin.time)
+       + (t_end.millitm - t_begin.millitm));
+	print_calculations(calculations, x);
+	printf ("Data rate: %.9f MBPS\n", 
+		((total_records_read*sizeof(Record))/(float)time_spent_ms * 1000)/1000000);
 	return 0;
 }

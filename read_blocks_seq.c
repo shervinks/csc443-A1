@@ -4,7 +4,6 @@
 #include <sys/timeb.h>
 #include "utils.h"
 
-#define MAX_CHARS_PER_LINE 16
 
 
 int main(int argc, char *argv[]) {

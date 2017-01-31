@@ -3,6 +3,7 @@
 #include <string.h>
 #include "utils.h"
 #include <time.h>
+#include <sys/timeb.h>
 
 int main(int argc, char *argv[]) {
 	if (argc < 4) {
@@ -10,6 +11,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 	FILE *fp_read;
+	struct timeb t_begin, t_end;
+	long time_spent_ms;
 
 	/* open dat file for reading */
 	if (!(fp_read= fopen ( argv[1] , "rb" ))) {
@@ -38,6 +41,9 @@ int main(int argc, char *argv[]) {
 
 	Record * buffer = (Record *) calloc (total_records, sizeof (Record));
 
+	// beging recording time
+	ftime(&t_begin);
+
 	/* reading records */
 	float calculations[x*2];
 	int n = fread (buffer, sizeof(Record), total_records, fp_read);
@@ -46,6 +52,7 @@ int main(int argc, char *argv[]) {
 	int i;
 	int r_val;
 	int buffer_size;
+	int total_records_read;
 	srand(time(NULL));
 	for (i = 0; i < x; i++){
 		r_val = rand() % total_records;
@@ -54,12 +61,20 @@ int main(int argc, char *argv[]) {
 		} else {
 			buffer_size = r_val + records_per_block;
 		}
+		total_records_read += buffer_size;
 		get_calculation(buffer, buffer_size, calculations, i*2, r_val);
 	}
-
-	print_calculations(calculations, x);
-
 	free(buffer);
+	// finish recording time
+	ftime(&t_end);
+
+	time_spent_ms = (long double) (1000 *(t_end.time - t_begin.time)
+       + (t_end.millitm - t_begin.millitm));
+	print_calculations(calculations, x);
+	printf ("Data rate: %.9f MBPS\n", 
+		((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/1000000);
+
+
 	return 0;
 }
 
