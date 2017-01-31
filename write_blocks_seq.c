@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 	long block_size = atol(argv[2]);
 	long block_capacity = block_size / sizeof(Record);
 	char current_line[MAX_CHARS_PER_LINE];
-	Record buffer[block_capacity];
+	Record * buffer = (Record *) calloc (block_capacity, sizeof (Record)) ;
 	FILE *fp_read;
 	FILE *fp_write;
 	/* open text file for reading */
@@ -44,17 +44,17 @@ int main(int argc, char *argv[]) {
 		i++;
 		// If the buffer is full flush the content into disk
 		if (i == block_capacity) { // buffer is full
-			fwrite ( &buffer, sizeof(Record), block_capacity, fp_write);
+			fwrite ( buffer, sizeof(Record), block_capacity, fp_write);
 			fflush (fp_write);
 			i = 0;
 		}
 	}
 	// Check if there is anything remaning in the buffer to write
 	if (i > 0) {
-		fwrite ( &buffer, sizeof(Record), i, fp_write);
+		fwrite ( buffer, sizeof(Record), i, fp_write);
 	}
+	free(buffer);
 	fclose (fp_write);
 	fclose (fp_read);
-	//print_dat_file("records.dat");
 	return 0;
 }
