@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 	}
 	/* open binary file for writing */
 	if (!(fp_write = fopen ( "records.dat" , "wb" ))) {
-		printf ("Could not open file \"%s\" for writing \n", "records.dat");
+		printf ("Could not open file \"%s\" for writing\n", "records.dat");
 		return (-1);
 	}
 	int i = 0;

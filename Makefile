@@ -46,4 +46,4 @@ write_lines: $(WRITE_LINES)
 	$(CC) $(CFLAGS) $^ -o $@
 	
 clean:  
-	rm write_blocks_seq read_blocks_seq read_ram_seq read_blocks_rand read_ram_rand *.o
+	rm write_blocks_seq read_blocks_seq read_ram_seq read_blocks_rand read_ram_rand write_blocks_rand write_ram_rand write_lines
