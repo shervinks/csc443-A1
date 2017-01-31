@@ -3,7 +3,7 @@
 #include <string.h>
 #include "utils.h"
 
-#define MAX_CHARS_PER_LINE 16
+#define MAX_CHARS_PER_LINE 32
 
 /** Convert line into Record **/
 Record parse_line(char line[]) {
