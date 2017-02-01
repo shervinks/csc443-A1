@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/timeb.h>
 #include "utils.h"
 
 int main(int argc, char *argv[]) {
@@ -27,23 +28,28 @@ int main(int argc, char *argv[]) {
 	Record * buffer = (Record *) calloc (total_records, sizeof(Record));
 	// Load whole data in RAM
 	int n = fread (buffer, sizeof(Record), total_records, fp_read);
+	
 	int x = atoi(argv[1]);
 	int i;
 	int r_val;
 	srand(time(NULL));
+    	struct timeb t_begin, t_end;
+	long time_spent_ms;
+	//Start timing
+	ftime(&t_begin);	
 	for (i=0; i<x; i++) {
 		r_val = rand() % total_records;
-		printf("rval: %d\n", r_val);
 		buffer[r_val] = *r;
 	}
 	free(r);
 	free(buffer);
+	//End timing
+	ftime(&t_end);
+	time_spent_ms = (long double) (1000 *(t_end.time - t_begin.time)
+       + (t_end.millitm - t_begin.millitm));
+	printf ("Data rate: %.9f MBPS\n", 
+		((x*sizeof(Record))/(float)time_spent_ms * 1000)/1000000);
 	fclose (fp_read);
-	// testing purpose only. needs to remove it
-	for (i=0; i < total_records; i++) {
-		printf("uid1: %d, uid2: %d\n", buffer[i].uid1, buffer[i].uid2);
-	}
-	printf("Total number of records: %ld, Records read: %d\n", total_records, n);
 	return 0;	
 }
  

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/timeb.h>
 #include "utils.h"
 
 int main(int argc, char *argv[]) {
@@ -29,13 +30,22 @@ int main(int argc, char *argv[]) {
 	int i;
 	int r_val;
 	srand(time(NULL));
+    	struct timeb t_begin, t_end;
+	long time_spent_ms;
+	//Start timing
+	ftime(&t_begin);  
 	for (i=0; i<x; i++) {
 		r_val = rand() % total_records;
 		fseek(fp_write, r_val*sizeof(Record), SEEK_SET);
 		fwrite(r, sizeof(Record), 1, fp_write);
 	}
 	free(r);
+	//End timing
+	ftime(&t_end);
+	time_spent_ms = (long double) (1000 *(t_end.time - t_begin.time)
+       + (t_end.millitm - t_begin.millitm));
+	printf ("Data rate: %.9f MBPS\n", 
+		((x*sizeof(Record))/(float)time_spent_ms * 1000)/1000000);
 	fclose (fp_write);
-	print_dat_file("records.dat");
 	return 0;	
 }
