@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 		return (-1);
 	}	
 
-	
+
 	// calculate the number of records in the dat file
 	fseek(fp_read, 0L, SEEK_END);
 	long filesize = ftell(fp_read);
@@ -44,9 +44,11 @@ int main(int argc, char *argv[]) {
 	// calculate number of records in a block
 	long records_per_block = block_size / sizeof(Record);
 
-	Record * buffer;
-	
+	Record * buffer = (Record *) calloc (records_per_block, sizeof (Record));
+
+	// beginning timing
 	ftime(&t_begin);
+	
 	/* reading records */
 	int i;
 	int j;
@@ -55,7 +57,6 @@ int main(int argc, char *argv[]) {
 	int unique = 1;
 	int current_id = -1;
 	for (i = 0; i < number_of_blocks; i++){
-		buffer = (Record *) calloc (records_per_block, sizeof (Record));
 		int n = fread (buffer, sizeof(Record), records_per_block, fp_read);
 
 		if (current_id == -1) current_id = buffer[0].uid1;
@@ -75,8 +76,9 @@ int main(int argc, char *argv[]) {
 		if (temp_max > max){
 			max = temp_max;
 		}
-		free(buffer);
+		
 	}
+	free(buffer);
 	ftime(&t_end);
 
 	time_spent_ms = (long double) (1000 *(t_end.time - t_begin.time)
@@ -84,8 +86,7 @@ int main(int argc, char *argv[]) {
 
 	printf("Max: %d Average: %.6f\n", max, (float)total_records/unique);
 	printf ("Data rate: %.9f MBPS\n", 
-		((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/1000000);
-	printf("total records: %d\n", total_records);
+		((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/1048576);
 	return 0;
 }
 

@@ -14,12 +14,16 @@ sizes = (
 	4 * MB
 )
 
-readers = (
-	"./read_blocks_seq",
-	"./read_ram_seq",
-	"./read_blocks_rand",
-	"./read_ram_rand"
-)
+
+print("Writing write_blocks_seq")
+for i in sizes:
+	print("\nBlock Size: " + str(i))
+	call(["./write_blocks_seq", "edges.csv", str(i)])
+
+print("Writing write_lines")
+for i in sizes:
+	print("\nBlock Size: " + str(i))
+	call(["./write_lines", "edges.csv", str(i)])
 
 print("Reading read_blocks_seq\n")
 for i in sizes:

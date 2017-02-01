@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 	// calculate number of records in a block
 	long records_per_block = block_size / sizeof(Record);
 
-	Record * buffer;
+	Record * buffer = (Record *) calloc (records_per_block, sizeof (Record));
 
 	// beging recording time
 	ftime(&t_begin);
@@ -54,7 +54,6 @@ int main(int argc, char *argv[]) {
 	int total_records_read = 0;
 	srand(time(NULL));
 	for (i = 0; i < x; i++){
-		buffer = (Record *) calloc (records_per_block, sizeof (Record));
 		// go to a random position in file
 		r_val = rand() % total_records;
 		fseek(fp_read, r_val*sizeof(Record), SEEK_SET);
@@ -62,16 +61,18 @@ int main(int argc, char *argv[]) {
 		int n = fread (buffer, sizeof(Record), records_per_block, fp_read);
 		total_records_read += n;
 		get_calculation(buffer, n, calculations, i*2, 0);	
-		free(buffer);
+		
 	}
 
 	// finish recording time
 	ftime(&t_end);
 
+	free(buffer);
+
 	time_spent_ms = (long double) (1000 *(t_end.time - t_begin.time)
        + (t_end.millitm - t_begin.millitm));
 	print_calculations(calculations, x);
 	printf ("Data rate: %.9f MBPS\n", 
-		((total_records_read*sizeof(Record))/(float)time_spent_ms * 1000)/1000000);
+		((total_records_read*sizeof(Record))/(float)time_spent_ms * 1000)/1048576);
 	return 0;
 }

@@ -28,11 +28,11 @@ int main(int argc, char *argv[]) {
 	
 	Record * buffer = (Record *) calloc (total_records, sizeof (Record));
 
-	// beging recording time
-	ftime(&t_begin);
-
 	/* reading records */
 	int n = fread (buffer, sizeof(Record), total_records, fp_read);
+
+	// beging recording time
+	ftime(&t_begin);
 
 	int j;
 	int temp_max = 0;
@@ -56,15 +56,19 @@ int main(int argc, char *argv[]) {
 	if (temp_max > max){
 		max = temp_max;
 	}
-	free(buffer);
+	
 	// finish recording time
 	ftime(&t_end);
+
+	free(buffer);
+	fclose(fp_read);
 
 	time_spent_ms = (long double) (1000 *(t_end.time - t_begin.time)
        + (t_end.millitm - t_begin.millitm));
 	printf("Max: %d Average: %.6f\n", max, (float)total_records/unique);
 	printf ("Data rate: %.9f MBPS\n", 
-		((total_records*sizeof(Record))/(float)time_spent_ms * 1000)/1000000);
+		((n*sizeof(Record))/(float)time_spent_ms * 1000)/1048576);
+	printf("n: %d\n", n);
 
 	return 0;
 }
