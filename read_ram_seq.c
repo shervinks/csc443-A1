@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[]) {
 	if (argc < 2) {
-        printf("read_blocks_seq takes 1 argument: read_blocks_seq <binary input filename> \n");
+        printf("read_ram_seq takes 1 argument: read_blocks_seq <binary input filename> \n");
         return -1;
     }
 	FILE *fp_read;

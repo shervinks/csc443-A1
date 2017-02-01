@@ -10,7 +10,7 @@
 
 int main(int argc, char *argv[]) {
 	if (argc < 4) {
-        printf("read_blocks_seq takes 2 arguments: read_blocks_seq <binary input filename> <block size> <X>\n");
+        printf("read_blocks_rand takes 3 arguments: read_blocks_seq <binary input filename> <block size> <X>\n");
         return -1;
     }
 	FILE *fp_read;
