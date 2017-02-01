@@ -77,7 +77,7 @@ for i in sizes:
 	print("\nBlock Size: " + str(i))
 	for j in attempt:
 		s.check_output(["./write_blocks_seq", "edges.csv", str(i)])
-		x = s.check_output(["./read_blocks_rand", "records.dat", str(i)])
+		x = s.check_output(["./read_blocks_rand", "records.dat", str(i), "10"])
 		print("Attempt " + str(j) + ": " + x.strip())
 		time += float(x.split()[6])
 	print("\n Average speed is " + str(time / len(attempt)) + " MBPS")
@@ -88,33 +88,33 @@ for i in sizes:
 	print("\nBlock Size: " + str(i))
 	for j in attempt:
 		s.check_output(["./write_blocks_seq", "edges.csv", str(i)])
-		x = s.check_output(["./read_ram_rand", "records.dat", str(i)])
+		x = s.check_output(["./read_ram_rand", "records.dat", str(i), "10"])
 		print("Attempt " + str(j) + ": " + x.strip())
 		time += float(x.split()[6])
 	print("\n Average speed is " + str(time / len(attempt)) + " MBPS")
 	read_ram_rand.append(time / len(attempt))
 	
 
-	print("===Testing write_blocks_rand===")
-	
-	time = 0.0
-	for j in attempt:
-		s.check_output(["./write_blocks_seq", "edges.dat", "1024"])
-		x = s.check_output(["./write_blocks_rand", "100000"])
-		print("Attempt " + str(j) + ": " + x.strip())
-		time += float(x.split()[2])
-	print("\n Average speed is " + str(time / len(attempt)) + " MBPS")
-	write_blocks_rand.append(time / len(attempt))
-	
-	print("===Testing write_ram_rand===")
-	time = 0.0
-	for j in attempt:
-		s.check_output(["./write_blocks_seq", "edges.csv", "1024"])
-		x = s.check_output(["./write_ram_rand", "100000"])
-		print("Attempt " + str(j) + ": " + x.strip())
-		time += float(x.split()[2])
-	print("\n Average speed is " + str(time / len(attempt)) + " MBPS")
-	write_ram_rand.append(time / len(attempt))
+print("===Testing write_blocks_rand===")
+
+time = 0.0
+for j in attempt:
+        s.check_output(["./write_blocks_seq", "edges.csv", "1024"])
+        x = s.check_output(["./write_blocks_rand", "100000"])
+        print("Attempt " + str(j) + ": " + x.strip())
+        time += float(x.split()[2])
+print("\n Average speed is " + str(time / len(attempt)) + " MBPS")
+write_blocks_rand.append(time / len(attempt))
+
+print("===Testing write_ram_rand===")
+time = 0.0
+for j in attempt:
+        s.check_output(["./write_blocks_seq", "edges.csv", "1024"])
+        x = s.check_output(["./write_ram_rand", "100000"])
+        print("Attempt " + str(j) + ": " + x.strip())
+        time += float(x.split()[2])
+print("\n Average speed is " + str(time / len(attempt)) + " MBPS")
+write_ram_rand.append(time / len(attempt))
 
 """
 print("write_blocks_seq: " + str(write_blocks_seq))
