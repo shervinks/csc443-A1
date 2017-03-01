@@ -5,7 +5,7 @@
 
 void print_hist(int *histogram, int size) {
 	for (int i = 0; i < size; i++) {
-		printf("Degree: %d, Count: %d\n", i+1, histogram[i]);
+		printf("%d,%d\n", i+1, histogram[i]);
 	}
 }
 
