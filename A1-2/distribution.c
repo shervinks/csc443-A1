@@ -15,7 +15,7 @@ void print_hist(int *histogram, int size, int column_id) {
 }
 
 int main(int argc, char *argv[]) {
-	if (argc < 3) {
+	if (argc < 5) {
 		printf("distribution takes 4 arguments: distribution <file_name> <block_size> <column_id> <max_degree>\n");
 		return -1;
 	}
