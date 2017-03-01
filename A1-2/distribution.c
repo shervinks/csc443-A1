@@ -3,9 +3,14 @@
 #include <string.h>
 #include "merge.h"
 
-void print_hist(int *histogram, int size) {
+void print_hist(int *histogram, int size, int column_id) {
 	for (int i = 0; i < size; i++) {
-		printf("%d,%d\n", i+1, histogram[i]);
+		if (column_id == 1) {
+			printf("Out-Degree: %d, Count: %d\n", i+1, histogram[i]);
+		}
+		else {
+			printf("In-Degree: %d, Count: %d\n", i+1, histogram[i]);
+		}
 	}
 }
 
@@ -87,6 +92,6 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	if (count > 0 && count < max_degree) histogram[count-1]++;
-	print_hist(histogram, max_degree);
+	print_hist(histogram, max_degree, column_id);
 	return 0;
 }
