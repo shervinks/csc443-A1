@@ -6,6 +6,7 @@ CFLAGS += -finline-functions
 CFLAGS += -funroll-loops
 CFLAGS += -D_FILE_OFFSET_BITS=64
 CFLAGS += -g
+CFLAGS += -std=c99
 
 # Source files
 DISK_SORT_SRC= merge_external.c disk_sort.c 

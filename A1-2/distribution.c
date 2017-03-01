@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
 
 			if (current_id != uid) {
 				current_id = uid;
-				if (count > 0) histogram[count-1]++;
+				if (count > 0 && count < max_degree) histogram[count-1]++;
 				count = 1;
 			}
 			else {
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
-	if (count > 0) histogram[count-1]++;
+	if (count > 0 && count < max_degree) histogram[count-1]++;
 	print_hist(histogram, max_degree);
 	return 0;
 }
