@@ -20,8 +20,9 @@ int main (int argc, char **argv) {
 
 	//get blocksize
 	long blocksize = atol(argv[3]);
-	//calculate allowed memory
-	long a_mem = atoi(argv[2]) - (atoi(argv[2]) % blocksize);
+	//calculate allowed memory. Needed to use half of the memory because
+	// qsort somehow doubles the allocated memory
+	long a_mem = (atoi(argv[2]) - (atoi(argv[2]) % blocksize)) / 2;
 
 	/* open binary file for reading */
 	if (!(fp_read= fopen ( argv[1] , "rb" ))) {
@@ -70,7 +71,7 @@ int main (int argc, char **argv) {
 
 	//initialize a buffer of appropriate size
 	Record * buffer = (Record *) calloc (records_per_buffer, sizeof (Record));
-
+	
 	/* Phase 1 of 2PMMS */
 
 	FILE *fp_write;
@@ -84,7 +85,6 @@ int main (int argc, char **argv) {
 		
 		//sort
 		qsort(buffer, n, sizeof(Record), compare);
-
 		//print_buffer(buffer, n);
 		//printf("\n");
 	
@@ -98,6 +98,7 @@ int main (int argc, char **argv) {
 		fwrite (buffer, sizeof(Record), n, fp_write);
 
 		fclose(fp_write);
+		
 	}
 	
 
