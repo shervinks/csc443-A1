@@ -62,3 +62,7 @@ for line in f2.readlines():
     #page.write(i, 4, y2_real[i])    
     
 #workbook.close()
+
+
+#14.90, 15.06, 14.94, 15.34, 15.62
+#205988, 206004, 206060, 205060, 205984
