@@ -10,21 +10,17 @@ CFLAGS += -std=c99
 
 # Source files
 DISK_SORT_SRC= merge_external.c disk_sort.c 
-PRINT_DAT_SRC= merge_external.c print_dat.c
 DISTRIBUTION_SRC = merge_external.c distribution.c
 
 # Binaries
-all: disk_sort print_dat distribution
+all: disk_sort distribution
  
 #sequential writing in blocks
 disk_sort: $(DISK_SORT_SRC)
-	$(CC) $(CFLAGS) $^ -o $@
-
-print_Dat: $(PRINT_DAT_SRC)
 	$(CC) $(CFLAGS) $^ -o $@
 
 distribution: $(DISTRIBUTION_SRC)
 	$(CC) $(CFLAGS) $^ -o $@
 	
 clean:  
-	rm disk_sort run_* print_dat distribution
+	rm disk_sort run_* distribution
