@@ -8,7 +8,8 @@ typedef struct record {
  int uid2;
 } Record;
 
-// Return 1 if r is in the array records else return 0
+// Return 1 if r is in the array records else return 0. Based on the binary search code in
+// https://www.tutorialspoint.com/data_structures_algorithms/binary_search_program_in_c.htm
 int binary_search(Record * records, Record r, int size) {
     int lowerBound = 0;
     int upperBound = size -1;
@@ -78,7 +79,7 @@ int main(int argc, char *argv[]) {
 
     int memory = 200 * 1024 * 1024; // memory contraint
     int m = memory / block_size; // number of blocks we can hold at any given time
-    int chunk_size = (m - 1) * block_size;
+    int chunk_size = ((m - 1) * block_size) / 2; // to avoid memory overflow in qsort
     // calculate the number of chunks of R needed to read the whole file
 	fseek(fp_read_R, 0L, SEEK_END);
 	long filesize = ftell(fp_read_R);
