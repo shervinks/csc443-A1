@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
     }
 
     int memory = 200 * 1024 * 1024; // memory contraint
-    int m = memory / block_size; // number of blocks we can hold at any given time
+    int m = memory / block_size; // max number of blocks we can hold at any given time
     int chunk_size = ((m - 1) * block_size) / 2; // to avoid memory overflow in qsort
     // calculate the number of chunks of R needed to read the whole file
 	fseek(fp_read_R, 0L, SEEK_END);
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     for (int i=0; i < chunk_num; i++) {
         int read_R = fread (buffer_R, sizeof(Record), chunk_size / sizeof (Record), fp_read_R);
         qsort(buffer_R, read_R, sizeof(Record), compare); // Sort R
-        fseek(fp_read_S, 0L, SEEK_SET);
+        fseek(fp_read_S, 0L, SEEK_SET); // Read S from the beginning
         for (int j=0; j<number_of_blocks; j++) {
             int read_S = fread (buffer_S, sizeof(Record), block_size / sizeof (Record), fp_read_S);
             for (int k = 0; k<read_S; k++) {
@@ -119,6 +119,11 @@ int main(int argc, char *argv[]) {
         }
     }
     printf("The number of true friend pairs is %d\n", count);
+
+    free(buffer_R);
+    free(buffer_S);
+    fclose (fp_read_R);
+    fclose (fp_read_S);
     return 0;
 
 }
