@@ -30,7 +30,7 @@ def reducer(key, list_of_values):
 # Do not modify below this line
 # =============================
 if __name__ == '__main__':
-    #inputdata = open(sys.argv[1])
+    inputdata = open(sys.argv[1])
     # Delete the line below and submit with the line above
-    inputdata = open('c:\\Users\\ashiq\\Downloads\\csc443_winter_2017-master\\csc443_winter_2017-master\\a2_mapreduce\\input\\books.json')
+    #inputdata = open('C:\\Users\\Shervin\\Desktop\\csc443\\csc443-A1\\A2\\input\\books.json')
     mr.execute(inputdata, mapper, reducer)

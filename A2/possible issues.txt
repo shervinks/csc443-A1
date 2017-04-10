@@ -1,0 +1,4 @@
+friend_count:
+        if v not in mr.intermediate.keys():
+            mr.emit((v, 0))
+will result in duplicates when the statement becomes true for more than 1 key

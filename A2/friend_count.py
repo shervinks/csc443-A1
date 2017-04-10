@@ -31,5 +31,5 @@ def reducer(key, list_of_values):
 if __name__ == '__main__':
     inputdata = open(sys.argv[1])
     # The line below is to test it in wing ide
-    #inputdata = open('c:\\Users\\ashiq\\Downloads\\csc443_winter_2017-master\\csc443_winter_2017-master\\a2_mapreduce\\input\\friends.json')
+    #inputdata = open('C:\\Users\\Shervin\\Desktop\\csc443\\csc443-A1\\A2\\input\\friends.json')
     mr.execute(inputdata, mapper, reducer)
